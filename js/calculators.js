@@ -75,6 +75,7 @@
     if (!form) return;
     const output = document.getElementById("emiResult");
     const tableBody = document.getElementById("emiTableBody");
+    const tenureDisplay = document.getElementById("emiTenureDisplay");
 
     form.addEventListener("submit", (event) => {
       event.preventDefault();
@@ -103,6 +104,10 @@
       const emi = monthlyRate === 0 ? principal / tenureMonths : (principal * monthlyRate * Math.pow(1 + monthlyRate, tenureMonths)) / (Math.pow(1 + monthlyRate, tenureMonths) - 1);
       const totalPayable = emi * tenureMonths;
       const totalInterest = totalPayable - principal;
+
+      if (tenureDisplay) {
+        tenureDisplay.textContent = `${tenureMonths} months`;
+      }
 
       const rows = [];
       let balance = principal;
