@@ -75,7 +75,6 @@
     if (!form) return;
     const output = document.getElementById("emiResult");
     const tableBody = document.getElementById("emiTableBody");
-    const tenureDisplay = document.getElementById("emiTenureDisplay");
 
     form.addEventListener("submit", (event) => {
       event.preventDefault();
@@ -125,6 +124,7 @@
       document.getElementById("emiTotalPayable").textContent = toMoney(totalPayable);
       document.getElementById("emiTotalInterest").textContent = toMoney(totalInterest);
       renderTable(tableBody, rows);
+      document.getElementById('emiTenureDisplay').textContent = tenureMonths + ' months';
       showResult(output);
     });
   }
