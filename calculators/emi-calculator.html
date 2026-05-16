@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EMI Calculator — Instant EMI Calculator | Calcbi</title>
+  <meta name="description" content="Calculate monthly EMI, total interest, and payoff cost for any loan with a fast browser tool that also shows a full amortization table for planning ahead.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://calcbi.tech/calculators/emi-calculator.html">
+  <meta property="og:title" content="EMI Calculator | Calcbi">
+  <meta property="og:description" content="Calculate monthly EMI, total interest, and payoff cost for any loan with a fast browser tool that also shows an amortization table.">
+  <meta property="og:url" content="https://calcbi.tech/calculators/emi-calculator.html">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://calcbi.tech/og-image.png">
+  <link rel="stylesheet" href="/css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "EMI Calculator",
+    "description": "Calculate monthly EMI, total interest, and payoff cost for any loan.",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Web"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {"@type": "Question", "name": "What is EMI?", "acceptedAnswer": {"@type": "Answer", "text": "EMI is the fixed monthly payment you make toward a loan until it is fully repaid."}},
+      {"@type": "Question", "name": "Does this include processing fees?", "acceptedAnswer": {"@type": "Answer", "text": "No. The calculator shows principal and interest only, so fees can be added separately."}},
+      {"@type": "Question", "name": "Can I change the tenure in months?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Enter any loan tenure in months and the EMI updates instantly after you calculate."}},
+      {"@type": "Question", "name": "Why is the amortization table useful?", "acceptedAnswer": {"@type": "Answer", "text": "It shows how each payment is split between interest and principal across the full loan term."}},
+      {"@type": "Question", "name": "What happens if the interest rate is zero?", "acceptedAnswer": {"@type": "Answer", "text": "The EMI becomes the loan amount divided by the number of months when the rate is zero."}}
+    ]
+  }
+  </script>
+</head>
+<body class="page-shell" data-page="emi">
+  <div class="container ad-slot ad-slot-top-banner"><span class="ad-label">Advertisement</span></div>
+  <nav class="site-nav">
+    <div class="container nav-inner">
+      <a class="brand" href="/"><img class="brand-logo" src="/images/calcbi_logo.png" alt="Calcbi logo"></a>
+      <div class="nav-links">
+        <a href="/">Home</a>
+        <a class="active" href="/calculators/emi-calculator.html">EMI</a>
+        <a href="/calculators/compound-interest.html">Compound</a>
+        <a href="/calculators/tip-calculator.html">Tip</a>
+        <a href="/calculators/discount-calculator.html">Discount</a>
+        <a href="/calculators/currency-converter.html">Currency</a>
+        <a href="/calculators/percentage-calculator.html">Percentage</a>
+        <a href="/calculators/salary-tax.html">Salary Tax</a>
+        <a href="/calculators/retirement-calculator.html">Retirement</a>
+      </div>
+    </div>
+  </nav>
+  <main class="section">
+    <div class="container page-header">
+      <h1 class="page-title">EMI Calculator</h1>
+      <p class="page-intro">Use this EMI calculator to estimate monthly loan payments, total interest, and the full repayment cost before you borrow.</p>
+    </div>
+    <div class="container page-layout">
+      <div class="page-main">
+        <section class="panel">
+          <form id="emiForm" class="form-grid single">
+            <div class="field">
+              <label for="emiLoanAmount">Loan Amount</label>
+              <div class="input-with-prefix"><span class="input-prefix">$</span><input id="emiLoanAmount" class="field-input" type="number" min="1" step="0.01" value="250000"></div>
+              <p id="emiLoanError" class="field-error"></p>
+            </div>
+            <div class="field">
+              <label for="emiInterestRate">Annual Interest Rate (%)</label>
+              <input id="emiInterestRate" class="field-input" type="number" min="0" step="0.01" value="7.5">
+              <p id="emiRateError" class="field-error"></p>
+            </div>
+            <div class="field">
+              <label for="emiTenure">Loan Tenure (months)</label>
+              <input id="emiTenure" class="field-input" type="number" min="1" step="1" value="240">
+              <p id="emiTenureError" class="field-error"></p>
+            </div>
+            <button class="button calculate-button" type="submit">Calculate EMI</button>
+          </form>
+        </section>
+        <div class="ad-slot ad-slot-mid-calculator"><span class="ad-label">Advertisement</span></div>
+        <section class="result-card" id="emiResult" hidden>
+          <p class="badge-note">Loan summary</p>
+          <h2 class="section-title">Your EMI Result</h2>
+          <p class="muted">Monthly EMI</p>
+          <div class="result-figure" id="emiMonthly">$0.00</div>
+          <div class="result-grid">
+            <div class="result-box"><span>Total amount payable</span><strong id="emiTotalPayable">$0.00</strong></div>
+            <div class="result-box"><span>Total interest payable</span><strong id="emiTotalInterest">$0.00</strong></div>
+            <div class="result-box"><span>Loan tenure</span><strong>240 months</strong></div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Month</th><th>Opening Balance</th><th>EMI</th><th>Interest</th><th>Principal</th><th>Closing Balance</th></tr></thead>
+              <tbody id="emiTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+        <section class="panel">
+          <h2 class="section-title">How the EMI calculation works</h2>
+          <p class="section-copy">The EMI formula spreads the loan over fixed monthly payments while reducing the balance each month.</p>
+          <div class="formula">EMI = P × r × (1 + r)^n / ((1 + r)^n - 1)</div>
+        </section>
+        <section class="panel">
+          <h2 class="section-title">When to use this calculator</h2>
+          <p class="section-copy">Use it before taking a home loan, car loan, personal loan, or refinance offer so you can compare monthly payments quickly.</p>
+        </section>
+        <div class="ad-slot ad-slot-mid-content"><span class="ad-label">Advertisement</span></div>
+        <section class="panel">
+          <h2 class="section-title">FAQ</h2>
+          <div class="faq-list">
+            <details class="faq-card"><summary>What is EMI?</summary><p class="faq-answer">EMI is the fixed monthly payment you make toward a loan until it is fully repaid.</p></details>
+            <details class="faq-card"><summary>Does this include processing fees?</summary><p class="faq-answer">No. The calculator shows principal and interest only, so fees can be added separately.</p></details>
+            <div class="ad-slot ad-slot-in-content"><span class="ad-label">Advertisement</span></div>
+            <details class="faq-card"><summary>Can I change the tenure in months?</summary><p class="faq-answer">Yes. Enter any loan tenure in months and the EMI updates instantly after you calculate.</p></details>
+            <details class="faq-card"><summary>Why is the amortization table useful?</summary><p class="faq-answer">It shows how each payment is split between interest and principal across the full loan term.</p></details>
+            <details class="faq-card"><summary>What happens if the interest rate is zero?</summary><p class="faq-answer">The EMI becomes the loan amount divided by the number of months when the rate is zero.</p></details>
+          </div>
+        </section>
+        <section class="section-tight">
+          <h2 class="section-title">Related tools</h2>
+          <div class="related-grid">
+            <a class="related-card" href="/calculators/compound-interest.html"><span class="tool-icon">CI</span><h3>Compound Interest</h3><p>Compare growth scenarios for savings and investments.</p></a>
+            <a class="related-card" href="/calculators/percentage-calculator.html"><span class="tool-icon">%</span><h3>Percentage Calculator</h3><p>Check loan percentages, ratios, and quick comparisons.</p></a>
+            <a class="related-card" href="/calculators/retirement-calculator.html"><span class="tool-icon">R</span><h3>Retirement Calculator</h3><p>Forecast long-term savings alongside loan planning.</p></a>
+          </div>
+        </section>
+      </div>
+      <aside class="sidebar-column">
+        <div class="ad-slot ad-slot-sidebar-right"><span class="ad-label">Advertisement</span></div>
+        <div class="info-card">
+          <h3 class="subsection-title">Planning tip</h3>
+          <p class="small-copy">Compare the EMI with your monthly budget and leave room for taxes, insurance, and other fixed costs.</p>
+        </div>
+      </aside>
+    </div>
+  </main>
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div><a class="brand" href="/"><img class="brand-logo" src="/images/calcbi_logo.png" alt="Calcbi logo"></a><p class="footer-note">Free online finance calculators for quick answers, better planning, and no signup.</p></div>
+      <div class="footer-links"><strong>Tools</strong><a href="/calculators/emi-calculator.html">EMI Calculator</a><a href="/calculators/compound-interest.html">Compound Interest</a><a href="/calculators/tip-calculator.html">Tip Calculator</a><a href="/calculators/discount-calculator.html">Discount Calculator</a><a href="/calculators/currency-converter.html">Currency Converter</a><a href="/calculators/percentage-calculator.html">Percentage Calculator</a><a href="/calculators/salary-tax.html">Salary Tax Estimator</a><a href="/calculators/retirement-calculator.html">Retirement Calculator</a></div>
+      <div class="footer-links"><strong>Company</strong><a href="/about.html">About</a><a href="/contact.html">Contact</a><a href="/privacy-policy.html">Privacy Policy</a></div>
+    </div>
+  </footer>
+  <div class="ad-slot ad-slot-sticky-footer" id="stickyAd"><span class="ad-label">Advertisement</span><button onclick="document.getElementById('stickyAd').style.display='none'" class="ad-close" aria-label="Close advertisement"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button></div>
+  <script src="/js/calculators.js" defer></script>
+</body>
+</html>
