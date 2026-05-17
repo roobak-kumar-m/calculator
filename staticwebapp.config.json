@@ -2,11 +2,11 @@
   "routes": [
     {
       "route": "/calculators/*",
-      "serve": "/calculators/*.html"
+      "rewrite": "/calculators/*.html"
     },
     {
       "route": "/",
-      "serve": "/index.html"
+      "rewrite": "/index.html"
     }
   ],
   "responseOverrides": {
