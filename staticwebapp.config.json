@@ -1,14 +1,4 @@
 {
-  "routes": [
-    {
-      "route": "/calculators/*",
-      "rewrite": "/calculators/*.html"
-    },
-    {
-      "route": "/",
-      "rewrite": "/index.html"
-    }
-  ],
   "responseOverrides": {
     "404": {
       "rewrite": "/404.html"
