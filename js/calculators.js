@@ -28,7 +28,9 @@
   }
 
   function showResult(node) {
-    if (node) node.hidden = false;
+    if (!node) return;
+    node.hidden = false;
+    node.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   function renderTable(tbody, rows) {
@@ -75,6 +77,7 @@
     if (!form) return;
     const output = document.getElementById("emiResult");
     const tableBody = document.getElementById("emiTableBody");
+    const tenureDisplay = document.getElementById("emiTenureDisplay");
 
     form.addEventListener("submit", (event) => {
       event.preventDefault();
@@ -104,10 +107,6 @@
       const totalPayable = emi * tenureMonths;
       const totalInterest = totalPayable - principal;
 
-      if (tenureDisplay) {
-        tenureDisplay.textContent = `${tenureMonths} months`;
-      }
-
       const rows = [];
       let balance = principal;
       for (let month = 1; month <= tenureMonths; month += 1) {
@@ -123,8 +122,10 @@
       document.getElementById("emiMonthly").textContent = toMoney(emi);
       document.getElementById("emiTotalPayable").textContent = toMoney(totalPayable);
       document.getElementById("emiTotalInterest").textContent = toMoney(totalInterest);
+      if (tenureDisplay) {
+        tenureDisplay.textContent = `${tenureMonths} months`;
+      }
       renderTable(tableBody, rows);
-      document.getElementById('emiTenureDisplay').textContent = tenureMonths + ' months';
       showResult(output);
     });
   }
