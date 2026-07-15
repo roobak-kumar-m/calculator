@@ -1,8 +1,35 @@
 {
-  "navigationFallback": {
-    "rewrite": "/index.html",
-    "exclude": ["/images/*.{png,jpg,gif,ico,svg}", "/css/*", "/js/*", "*.{css,js,json,ico,png,jpg,gif,svg,woff,woff2}"]
-  },
+  "routes": [
+    {
+      "route": "/",
+      "serve": "/index.html",
+      "statusCode": 200
+    },
+    {
+      "route": "/calculators/*",
+      "headers": {
+        "Cache-Control": "public, max-age=3600"
+      }
+    },
+    {
+      "route": "/css/*",
+      "headers": {
+        "Cache-Control": "public, max-age=86400"
+      }
+    },
+    {
+      "route": "/js/*",
+      "headers": {
+        "Cache-Control": "public, max-age=86400"
+      }
+    },
+    {
+      "route": "/images/*",
+      "headers": {
+        "Cache-Control": "public, max-age=86400"
+      }
+    }
+  ],
   "responseOverrides": {
     "404": {
       "rewrite": "/404.html",
@@ -10,6 +37,8 @@
     }
   },
   "mimeTypes": {
-    ".json": "text/json"
+    ".json": "text/json",
+    ".webp": "image/webp"
   }
-}
+}
+
